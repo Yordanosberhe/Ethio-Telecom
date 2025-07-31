@@ -1,12 +1,11 @@
 <?php
-include 'config.php'; // ✅ Connect to DB
+include 'config.php'; 
 
 $message = '';
 if (!$conn) {
     die("<p style='color:red;'>Database connection failed: " . htmlspecialchars(mysqli_connect_error()) . "</p>");
 }
 
-// Handle approval POST
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['guest_id'])) {
     $guest_id = intval($_POST['guest_id']);
     $approve_sql = "UPDATE guests SET approved = 1, approval_date = NOW() WHERE id = $guest_id";
@@ -53,6 +52,7 @@ if (!$result) {
     <tr>
       <th>Full Name</th>
       <th>ID Number</th>
+      <th>Visit Date</th>
       <th>Action</th>
     </tr>
 
@@ -62,6 +62,7 @@ if (!$result) {
         echo "<tr>";
         echo "<td>" . htmlspecialchars($row['full_name']) . "</td>";
         echo "<td>" . htmlspecialchars($row['id_number']) . "</td>";
+        echo "<td>" . htmlspecialchars($row['visit_date']) . "</td>";
         echo "<td>
           <form action='approve.php' method='POST' style='display:inline;'>
             <input type='hidden' name='guest_id' value='" . $row['id'] . "'>

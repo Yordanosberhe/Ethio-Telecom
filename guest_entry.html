@@ -16,24 +16,140 @@
   width: 150px;         
   max-width: 100%;     
 }
+    /* Modal Styles */
+    .modal {
+      display: none; /* Hidden by default */
+      position: fixed; /* Stay in place */
+      z-index: 1000; /* Sit on top */
+      left: 0;
+      top: 0;
+      width: 100%; /* Full width */
+      height: 100%; /* Full height */
+      overflow: auto; /* Enable scroll if needed */
+      background-color: rgb(0,0,0); /* Fallback color */
+      background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+      padding-top: 60px;
+    }
+    .modal-content {
+      background-color: #fefefe;
+      margin: 5% auto; /* 5% from the top and centered */
+      padding: 20px;
+      border: 1px solid #888;
+      width: 80%;
+      max-width: 400px;
+      border-radius: 8px;
+      text-align: center;
+    }
+    .close {
+      color: #aaa;
+      float: right;
+      font-size: 28px;
+      font-weight: bold;
+    }
+    .close:hover,
+    .close:focus {
+      color: black;
+      text-decoration: none;
+      cursor: pointer;
+    }
   </style>
 </head>
 <body>
-  <form action="guest_entry.php" method="POST">
+  <form id="guestForm" action="guest_entry.php" method="POST">
     <img src="ethio-telecom-logo.png" alt="Ethio Telecom Logo" class="logo">
     <h2>Guest Detail Entry</h2>
-    <input type="text" name="full_name" placeholder="Full Name" required>
-    <input type="text" name="id_number" placeholder="ID Number" required>
-    <input type="number" name="phone" placeholder="Phone Number" onkeydown="return event.key !=='e' && event.key !=='E' && event.key !=='.' " required >
-    <input type="number" name="office_number" placeholder="Office Number"  onkeydown="return event.key !=='e' && event.key !=='E'  && event.key !=='.' " required>
-    <!-- <input type="text" name="reason" placeholder="Reason for visit" required> -->
-    <!-- <input type="date" name="visit_date" placeholder="date"> -->
-    <label>Will you be bringing your Laptop?</label>
+    <label for="full_name">Full Name <span style="color:red;">*</span></span></label>
+    <input type="text" id="full_name" name="full_name" placeholder="Full Name" pattern="[a-zA-z]{1,}" maxlength="35">
+
+    <label for="id_type">ID Type <span style="color:red;">*</span></span></label>
+    <select id="id_type" name="id_type" required>
+      <option value="National Id">National Id</option>
+      <option value="Kebele">Kebele</option>
+      <option value="Passport">Passport</option>
+      <option value="Driver's License">Driver's License</option>
+    
+    </select>
+    <label for="id_number">ID Number <span style="color:red;">*</span></span></label>
+    <input type="text" id="id_number" name="id_number" placeholder="ID Number" required>
+
+    <label for="phone">Phone Number <span style="color:red;">*</span></span></label>
+    <input type="text" id="phone" name="phone" placeholder="(+251)9XXXXXXXX" pattern="9[0-9]{9}" maxlength="10" minlength="10"  title="Phone number must start with 9 and be 10 digits long (e.g., 9XXXXXXXXX)" oninput="this.value=this.value.replace(/[^0-9]/g,'');" onkeydown="return event.key !=='e' && event.key !=='E'  && event.key !=='.' " required>
+
+    <label for="office_number">Office Number <span class="optional">(Optional)</span></span></label>
+    <input type="number" id="office_number" name="office_number"  placeholder="office_number" maxlength="3" minlength="3" onkeydown="return event.key !=='e' && event.key !=='E'  && event.key !=='.' ">
+
+    <label for="reason">Reason for visit</label>
+    <input type="text" id="reason" name="reason" placeholder="Reason for visit">
+
+    <label for="visit_date">Visit Date <span style="color:red;">*</span></span></label>
+    <input type="date" id="visit_date" name="visit_date" placeholder="date">
+    <label>Will you be bringing your Laptop? <span style="color:red;">*</span></span></label>
     <select name="has_laptop">
       <option value="1">Yes</option>
       <option value="0">No</option>
     </select>
     <button type="submit">Save Guest</button>
   </form>
+
+  <!-- The Modal -->
+  <div id="responseModal" class="modal">
+    <!-- Modal content -->
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <p id="modalMessage"></p>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const guestForm = document.getElementById('guestForm');
+      const modal = document.getElementById('responseModal');
+      const modalMessage = document.getElementById('modalMessage');
+      const closeBtn = document.querySelector('.modal .close');
+
+      guestForm.addEventListener('submit', function (e) {
+        e.preventDefault(); // Prevent default form submission
+
+        const formData = new FormData(guestForm);
+
+        fetch('guest_entry.php', {
+  method: 'POST',
+  body: formData
+})
+.then(response => {
+  if (!response.ok) {
+    throw new Error(`HTTP ${response.status}`);
+  }
+  return response.json();
+})
+.then(data => {
+  if (data.success) {
+    modalMessage.textContent = data.message || 'Success!';
+    guestForm.reset();
+  } else {
+    modalMessage.textContent = data.message || 'Error!';
+  }
+  modal.style.display = 'block';
+})
+.catch(error => {
+  console.error('Fetch error:', error);
+  modalMessage.textContent = 'A network error occurred. Details: ' + error;
+  modal.style.display = 'block';
+});
+
+      });
+
+      // Function to close the modal
+      function closeModal() {
+        modal.style.display = 'none';
+      }
+
+      // Close the modal when the user clicks on <span> (x)
+      closeBtn.onclick = closeModal;
+
+      // Close the modal when the user clicks anywhere outside of the modal content
+      window.onclick = (event) => event.target === modal ? closeModal() : null;
+    });
+  </script>
 </body>
 </html>

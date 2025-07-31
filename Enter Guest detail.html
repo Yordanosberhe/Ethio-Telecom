@@ -1,0 +1,119 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Enter Guest Details</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #8BC43F;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    form {
+      background: #fff;
+      padding: 25px 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.1);
+      width: 100%;
+      max-width: 450px;
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      margin-top: 12px;
+      font-weight: bold;
+    }
+
+    .optional {
+      font-weight: normal;
+      color: #777;
+      font-size: 13px;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      box-sizing: border-box;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      background: #2E7D32;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      margin-top: 20px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #1B5E20;
+    }
+
+    .logo {
+      width: 140px;
+      display: block;
+      margin: 0 auto 20px;
+    }
+  </style>
+</head>
+<body>
+  <form action="guest_entry.php" method="POST">
+    <img src="ethio-telecom-logo.png" alt="Ethio Telecom Logo" class="logo">
+    <h2>Guest Detail Entry</h2>
+
+    <label for="full_name">Full Name <span style="color:red;">*</span></label>
+    <input type="text" id="full_<div class="form-group" pattern="[a-zA-Z]{1,}" maxlength="35">
+        <label for="idType">ID Type <span style="color:red;">*</span></label>
+        <select id="idType">
+          <option>Passport</option>
+          <option>National ID</option>
+          <option>Driver's License</option>
+        </select>
+      </div>
+
+    <label for="id_number">ID Number <span style="color:red;">*</span></label>
+    <input type="text" id="id_number" name="id_number" required>
+<label for="phone">Phone Number <span style="color:red;">*</span></label>
+<div style="display: flex; gap: 5px;">
+  <span style="padding: 10px; background: #eee; border: 1px solid #ccc; border-radius: 5px 0 0 5px;">+251</span>
+  <input type="tel" id="phone" name="phone" pattern="[0-9]{9}" maxlength="9"
+         placeholder="912345678" required
+         style="flex: 1; border-radius: 0 5px 5px 0;"
+         oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+</div>
+
+    <label for="office_number">Office Number <span class="optional">(Optional)</span></label>
+    <input type="number" id="office_number"  name="office_number" pattern="[0-9]{4}" maxlength="4" 
+           onkeydown="return event.key !== 'e' && event.key !== 'E' && event.key !== '.' " >
+           <label for="visitTime">Date & visitTime<span style="color:red;">*</span></label>
+        <input type="datetime-local" id="visitTime" required>
+
+    <label for="has_laptop">Will you be bringing your Laptop? <span style="color:red;">*</span></label>
+    <select id="has_laptop" name="has_laptop" placeholder="Select" required>
+    
+      <option value="1">Yes</option>
+      <option value="0">No</option>
+    </select>
+
+    <button type="submit">Save Guest</button>
+  </form>
+</body>
+</html>
